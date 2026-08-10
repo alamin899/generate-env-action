@@ -1,5 +1,8 @@
 name: 'Generate Environment File'
 description: 'Dynamically generates a .env file from secrets, vars, and a .env.example template'
+branding:
+  icon: 'settings'
+  color: 'blue'
 
 inputs:
   secrets_context:
