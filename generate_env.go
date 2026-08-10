@@ -38,27 +38,15 @@ func getMergedEnvData() map[string]interface{} {
 }
 
 func getExcludeKeys() map[string]bool {
-	keys := map[string]bool{
-		"github_token":              true,
-		"DOCKER_PASSWORD":           true,
-		"DOCKER_USERNAME":           true,
-		"DOCKER_CONTAINER_REGISTRY": true,
-		"DOCKER_REPOSITORY_NAME":    true,
-		"VM_PUBLIC_IP":              true,
-		"VM_USERNAME":               true,
-		"SSH_KEY":                   true,
-		"SSH_PORT":                  true,
-		"HOST_PORT":                 true,
-		"CONTAINER_RUNNING_PORT":    true,
-		"DOCKER_NETWORK":            true,
-		"JWT_PRIVATE_KEY":           true,
-		"JWT_PUBLIC_KEY":            true,
-	}
+	keys := make(map[string]bool)
 
 	additionalKeysStr := os.Getenv("EXCLUDE_KEYS")
 	if strings.TrimSpace(additionalKeysStr) != "" {
 		for _, k := range strings.Split(additionalKeysStr, ",") {
-			keys[strings.TrimSpace(k)] = true
+			trimmedKey := strings.TrimSpace(k)
+			if trimmedKey != "" {
+				keys[trimmedKey] = true
+			}
 		}
 	}
 	return keys
@@ -71,7 +59,7 @@ func readLines(path string) []string {
 		return lines
 	}
 	defer file.Close()
-	
+
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text()+"\n")
