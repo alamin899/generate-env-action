@@ -1,0 +1,31 @@
+name: 'Generate Environment File'
+description: 'Dynamically generates a .env file from secrets, vars, and a .env.example template'
+
+inputs:
+  secrets_context:
+    description: 'The JSON string of the secrets context (e.g. ${{ toJson(secrets) }})'
+    required: true
+  vars_context:
+    description: 'The JSON string of the vars context (e.g. ${{ toJson(vars) }})'
+    required: true
+  exclude_keys:
+    description: 'Comma-separated list of additional keys to exclude'
+    required: false
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Go runtime
+      uses: actions/setup-go@v5
+      with:
+        go-version: '>=1.20'
+
+    - name: Run Env Generator Script
+      shell: bash
+      env:
+        SECRETS_CONTEXT: ${{ inputs.secrets_context }}
+        VARS_CONTEXT: ${{ inputs.vars_context }}
+        EXCLUDE_KEYS: ${{ inputs.exclude_keys }}
+      run: |
+        go run ${{ github.action_path }}/generate_env.go
