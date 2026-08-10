@@ -3,10 +3,10 @@ description: 'Dynamically generates a .env file from secrets, vars, and a .env.e
 
 inputs:
   secrets_context:
-    description: 'The JSON string of the secrets context (e.g. ${{ toJson(secrets) }})'
+    description: 'The JSON string of the secrets context (e.g. toJson(secrets))'
     required: true
   vars_context:
-    description: 'The JSON string of the vars context (e.g. ${{ toJson(vars) }})'
+    description: 'The JSON string of the vars context (e.g. toJson(vars))'
     required: true
   exclude_keys:
     description: 'Comma-separated list of additional keys to exclude'
