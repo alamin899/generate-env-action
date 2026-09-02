@@ -1,5 +1,5 @@
-name: 'Generate Environment File'
-description: 'Dynamically generates a .env file from secrets, vars, and a .env.example template'
+name: 'Dynamic Environment File Generator'
+description: 'Securely generate .env files and export to $GITHUB_ENV from repository Secrets and Variables, with template support.'
 branding:
   icon: 'lock'
   color: 'green'
