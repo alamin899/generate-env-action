@@ -36,3 +36,5 @@ jobs:
 - `secrets_context`: Required. The JSON string of the secrets context (e.g. `${{ toJson(secrets) }}`).
 - `vars_context`: Required. The JSON string of the vars context (e.g. `${{ toJson(vars) }}`).
 - `exclude_keys`: Optional. Comma-separated list of additional keys to exclude from the generated `.env` file.
+- `is_set_process_env`: Optional. If `'true'`, exports all generated environment variables to `$GITHUB_ENV`. Default: `'true'`.
+- `generate_env_files`: Optional. Comma-separated list of environment files to generate (e.g. `.env,.env.local`). If empty, no files are generated. Default: `''` (empty).

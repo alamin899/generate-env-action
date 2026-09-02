@@ -104,14 +104,44 @@ func main() {
 		}
 	}
 
-	outFile, err := os.Create(".env")
-	if err != nil {
-		fmt.Printf("Error creating .env file: %v\n", err)
-		os.Exit(1)
+	// Determine output files
+	envFilesStr := os.Getenv("GENERATE_ENV_FILES")
+	if strings.TrimSpace(envFilesStr) != "" {
+		files := strings.Split(envFilesStr, ",")
+		for _, file := range files {
+			fileName := strings.TrimSpace(file)
+			if fileName == "" {
+				continue
+			}
+			outFile, err := os.Create(fileName)
+			if err != nil {
+				fmt.Printf("Error creating %s file: %v\n", fileName, err)
+				continue
+			}
+			for _, line := range newLines {
+				outFile.WriteString(line)
+			}
+			outFile.Close()
+		}
 	}
-	defer outFile.Close()
 
-	for _, line := range newLines {
-		outFile.WriteString(line)
+	// Write to GITHUB_ENV if requested
+	isSetProcessEnv := os.Getenv("IS_SET_PROCESS_ENV")
+	if strings.ToLower(strings.TrimSpace(isSetProcessEnv)) == "true" {
+		githubEnvFile := os.Getenv("GITHUB_ENV")
+		if githubEnvFile != "" {
+			f, err := os.OpenFile(githubEnvFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+			if err != nil {
+				fmt.Printf("Error opening GITHUB_ENV file: %v\n", err)
+			} else {
+				defer f.Close()
+				for key, val := range envData {
+					if !excludeKeys[key] {
+						valStr := fmt.Sprintf("%v", val)
+						f.WriteString(fmt.Sprintf("%s<<EOF_ENV_GENERATOR\n%s\nEOF_ENV_GENERATOR\n", key, valStr))
+					}
+				}
+			}
+		}
 	}
 }

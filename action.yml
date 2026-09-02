@@ -15,6 +15,14 @@ inputs:
     description: 'Comma-separated list of additional keys to exclude'
     required: false
     default: ''
+  is_set_process_env:
+    description: 'If true, exports all environment variables to GITHUB_ENV'
+    required: false
+    default: 'true'
+  generate_env_files:
+    description: 'Comma-separated list of .env files to generate (e.g. .env,.env.local). If empty, no files are generated.'
+    required: false
+    default: ''
 
 runs:
   using: "composite"
@@ -30,5 +38,7 @@ runs:
         SECRETS_CONTEXT: ${{ inputs.secrets_context }}
         VARS_CONTEXT: ${{ inputs.vars_context }}
         EXCLUDE_KEYS: ${{ inputs.exclude_keys }}
+        IS_SET_PROCESS_ENV: ${{ inputs.is_set_process_env }}
+        GENERATE_ENV_FILES: ${{ inputs.generate_env_files }}
       run: |
         go run ${{ github.action_path }}/generate_env.go
